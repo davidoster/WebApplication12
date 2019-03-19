@@ -109,6 +109,42 @@ public class HelloWorld extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //processRequest(request, response);
+        String server = "ra1.anystream.eu:1011";
+        String username ="mydb";
+        String password = "mydb";
+        String database = "mydb";
+        String query = "SELECT * FROM `mydb`.`Employee`;";
+        Database db = new Database();
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.print("<!DOCTYPE html>");
+            out.print("<html>");
+            out.print("<head>");
+            out.print("<title>Servlet HelloWorld</title>");            
+            out.print("</head>");
+            out.print("<body>");
+            out.print("<h1>Servlet HelloWorld at " + request.getContextPath() + "</h1>");
+            //out.print(request.getParameter("name"));
+            String name = request.getParameter("name");
+            String dept = request.getParameter("dept");
+            query = "SELECT * FROM `mydb`.`Employee` " + 
+                    "WHERE `NAME` = '" + name + "' " +
+                    "AND `DEPT` = '"   + dept + "';";
+            out.print("Name: " + name + "<br />");
+            out.print("Dept: " + dept + "<br />");
+            ResultSet rs = db.Database(server, database, username, password, query);
+            try {
+                while(rs.next()) {
+                    out.println(rs.getString(1) + "&nbsp;" + rs.getString(2) + "&nbsp;" + rs.getString(3) + 
+                                                  "&nbsp;" + rs.getString(4) + "<br />");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(HelloWorld.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            out.print("</body>");
+            out.print("</html>");
+        }
         
     }
 
